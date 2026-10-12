@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # inlämningsuppgift
 
 Inlämningsuppgift Java — kontohanteringssystem med arv och polymorfism.
@@ -30,3 +31,133 @@ java -cp src Main
 ## Dokumentation
 
 Se [Docs/Planeringsmall.md](Docs/Planeringsmall.md) för projektskiss.
+=======
+# Bankingboys
+Inläminngsuppgift Java
+# MiniBank – Console Banking System
+
+MiniBank is an interactive Java console program that simulates a small bank.
+Users can open and close accounts, deposit, withdraw, transfer money, search
+for accounts and run a month-end process that applies interest and fees.
+
+The core idea: all account types share the same data (owner, balance), but
+each type follows **different rules** for withdrawals and month-end processing.
+Those different rules are what make inheritance and polymorphism meaningful
+in this project.
+
+---
+
+## Class structure
+
+```
+Main                         → entry point, starts the program
+BankMenu                     → menu loop, reads user choices
+Bank                         → holds ArrayList<Account>, search + statistics
+InputHelper                  → safe input reading (never crashes)
+
+Account (abstract)           → superclass
+ ├── SavingsAccount          → earns interest, max 3 withdrawals/month
+ ├── CheckingAccount         → allows overdraft, monthly fee
+ └── StudentAccount          → no fee, small interest, withdrawal cap per transaction
+
+InterestBearing (interface)  → implemented by SavingsAccount + StudentAccount
+Transaction                  → one deposit/withdrawal/transfer record
+InsufficientFundsException   → custom exception
+```
+
+---
+
+## Menu
+
+```
+1. Open account
+2. Close account
+3. Deposit
+4. Withdraw
+5. Transfer
+6. Search accounts by owner
+7. Show transaction history
+8. Run month-end
+9. Bank statistics
+0. Exit
+```
+
+---
+
+## How the project meets the requirements
+
+| # | Requirement | Implementation |
+|---|---|---|
+| 1 | Superclass + at least 3 subclasses | `Account` → `SavingsAccount`, `CheckingAccount`, `StudentAccount` (using `extends`) |
+| 2 | ≥2 overridden methods per subclass + polymorphic list | Each subclass overrides `withdraw()`, `applyMonthEnd()` and `getAccountType()`. "Run month-end" iterates over `List<Account>` and calls `applyMonthEnd()`. The correct version runs automatically for each object (interest for savings, fee for checking). |
+| 3 | Own interface, ≥2 implementers, used polymorphically | `InterestBearing { double calculateInterest(); }` is implemented by `SavingsAccount` and `StudentAccount`. `Bank.projectYearlyInterest()` loops over all `InterestBearing` objects and sums their interest, without knowing their concrete class. |
+| 4 | Collections searched/aggregated with real data | `ArrayList<Account>` in `Bank`, and `ArrayList<Transaction>` in each account. Supports search by owner name (user input), lookup by account number, total bank balance and largest transaction. Nothing is hardcoded. |
+| 5 | Interactive menu in a loop, ≥4 actions | `BankMenu` runs a loop with 9 actions, all connected to the account collection. Domain-specific actions: Transfer and Run month-end. |
+| 6 | ≥2 meaningful try/catch blocks | (a) The `Account` constructor throws `IllegalArgumentException` for an empty owner name or a negative starting balance. (b) `withdraw()` throws `InsufficientFundsException`, caught during withdraw and transfer. (c) `NumberFormatException` is handled in `InputHelper`. |
+| 7 | Program cannot crash from invalid menu input | `InputHelper.readInt(prompt, min, max)` loops until the input is valid. It rejects letters, empty input and out-of-range numbers. |
+| 8 | Comments/README with correct English terminology | This README plus JavaDoc comments in the code. |
+| 9 | Continuous Git usage | ≥20 commits over ≥5 days with descriptive English messages (see development plan below). |
+
+---
+
+## Design decisions
+
+### Superclass vs interface
+- `Account` (abstract class) models **what something is**: every account type *is an* account and shares fields such as owner, account number and balance.
+- `InterestBearing` (interface) models **a capability** that only *some* account types have. `CheckingAccount` does not earn interest, so putting `calculateInterest()` in `Account` would force it to implement a method that makes no sense for it.
+
+### Why `Account` is abstract
+A plain "account" with no type does not exist in this bank. Making the class `abstract` prevents it from being instantiated and forces each subclass to define its own rules through abstract methods.
+
+### Money representation
+`double` cannot represent values like 0.1 exactly (`0.1 + 0.2 == 0.30000000000000004`), so repeated calculations can drift. This project uses `BigDecimal` (or amounts stored as whole öre in a `long`) to avoid rounding errors.
+
+### Input handling
+All input is read with `scanner.nextLine()` and parsed manually. If `nextInt()` and `nextLine()` are mixed, the leftover newline can cause input to be skipped, and `nextInt()` throws `InputMismatchException` when given letters.
+
+---
+
+## Key concepts used
+
+| Concept | Where |
+|---|---|
+| **Inheritance** | Subclasses extend `Account` and reuse its fields and methods |
+| **Abstraction** | `Account` is abstract; `InterestBearing` defines behavior without implementation |
+| **Polymorphism** | A `List<Account>` calls `applyMonthEnd()` and the correct subclass version runs |
+| **Encapsulation** | Fields are `private`; balance changes only through `deposit()` / `withdraw()` |
+| **Method overriding** | `@Override` on `withdraw()`, `applyMonthEnd()`, `getAccountType()` |
+| **Exception handling** | Constructor validation, custom checked exception, input parsing |
+
+---
+
+## How to run
+
+```bash
+javac -d out src/*.java
+java -cp out Main
+```
+
+---
+
+## Development plan (Git)
+
+| Day | Work |
+|---|---|
+| 1 | Project setup, abstract `Account` class, README skeleton |
+| 2 | The three subclasses with overrides, `Transaction` class |
+| 3 | `Bank` with ArrayList, search and statistics; `InterestBearing` interface |
+| 4 | `InputHelper`, `BankMenu` loop, wiring menu actions |
+| 5 | Exceptions: constructor validation, `InsufficientFundsException`; edge-case testing |
+| 6+ | Month-end, transfer, final README and comments |
+
+Commit after each small working step. Example commit messages:
+- `Add abstract Account class with owner and balance fields`
+- `Add overdraft limit check to CheckingAccount.withdraw`
+- `Handle non-numeric menu input in InputHelper`
+
+---
+
+## Pair work extension
+If developed as a pair, the extra class/feature beyond the base requirements is
+`InsufficientFundsException` together with the **Transfer** feature.
+>>>>>>> 8a2ca94d709700c838875fde0181bcb9c3a23457
