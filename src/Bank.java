@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bank {
+    // Polymorphism: the list type is Account, the objects are subclasses.
     private final List<Account> accounts = new ArrayList<>();
     private final List<Transaction> transactions = new ArrayList<>();
 
@@ -49,10 +50,12 @@ public class Bank {
     }
 
     public boolean withdraw(String accountNumber, double amount) {
-        Account account = findAccount(accountNumber);
-        if (account == null) {
+        Account found = findAccount(accountNumber);
+        if (found == null) {
             return false;
         }
+        // Polymorphism through the interface reference. The runtime type picks the override.
+        Withdrawable account = found;
         boolean success = account.withdraw(amount);
         if (success) {
             transactions.add(new Transaction(accountNumber, "WITHDRAW", amount));
@@ -66,7 +69,9 @@ public class Bank {
         if (from == null || to == null || amount <= 0) {
             return false;
         }
-        if (!from.withdraw(amount)) {
+        // The same interface reference is used for a transfer.
+        Withdrawable source = from;
+        if (!source.withdraw(amount)) {
             return false;
         }
         to.deposit(amount);
@@ -86,14 +91,9 @@ public class Bank {
     }
 
     public void monthEnd() {
+        // Polymorphism: one call on the superclass type. Each subclass runs its own override.
         for (Account account : accounts) {
-            if (account instanceof SavingsAccount savingsAccount) {
-                savingsAccount.applyInterest();
-                savingsAccount.resetMonthlyWithdrawals();
-            } else if (account instanceof StudentAccount studentAccount) {
-                studentAccount.monthlyFee();
-                studentAccount.resetFreeWithdrawals();
-            }
+            account.monthEnd();
         }
     }
 }

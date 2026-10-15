@@ -76,29 +76,38 @@ public class Main {
 
     private static void handleOpenAccount(Bank bank, Scanner scanner) {
         System.out.print("Kontotyp (1=Savings, 2=Checking, 3=Student): ");
-        int type = scanner.nextInt();
-        scanner.nextLine();
+        Integer type = readInt(scanner);
+        if (type == null) {
+            return;
+        }
 
         System.out.print("Kontonummer: ");
         String accountNumber = scanner.nextLine();
         System.out.print("Ägare: ");
         String ownerName = scanner.nextLine();
         System.out.print("Startsaldo: ");
-        double balance = scanner.nextDouble();
-        scanner.nextLine();
+        Double balance = readDouble(scanner);
+        if (balance == null) {
+            return;
+        }
 
+        // Polymorphism: the variable type is Account, the object is a subclass.
         Account account;
         switch (type) {
             case 1:
                 System.out.print("Ränta (t.ex. 0.02): ");
-                double interestRate = scanner.nextDouble();
-                scanner.nextLine();
+                Double interestRate = readDouble(scanner);
+                if (interestRate == null) {
+                    return;
+                }
                 account = new SavingsAccount(accountNumber, ownerName, balance, interestRate);
                 break;
             case 2:
                 System.out.print("Övertrasseringsgräns: ");
-                double overdraftLimit = scanner.nextDouble();
-                scanner.nextLine();
+                Double overdraftLimit = readDouble(scanner);
+                if (overdraftLimit == null) {
+                    return;
+                }
                 account = new CheckingAccount(accountNumber, ownerName, balance, overdraftLimit);
                 break;
             case 3:
@@ -130,8 +139,10 @@ public class Main {
         System.out.print("Kontonummer: ");
         String accountNumber = scanner.nextLine();
         System.out.print("Belopp: ");
-        double amount = scanner.nextDouble();
-        scanner.nextLine();
+        Double amount = readDouble(scanner);
+        if (amount == null) {
+            return;
+        }
 
         if (bank.deposit(accountNumber, amount)) {
             System.out.println("Insättning klar");
@@ -144,8 +155,10 @@ public class Main {
         System.out.print("Kontonummer: ");
         String accountNumber = scanner.nextLine();
         System.out.print("Belopp: ");
-        double amount = scanner.nextDouble();
-        scanner.nextLine();
+        Double amount = readDouble(scanner);
+        if (amount == null) {
+            return;
+        }
 
         if (bank.withdraw(accountNumber, amount)) {
             System.out.println("Uttag klart");
@@ -160,8 +173,10 @@ public class Main {
         System.out.print("Till kontonummer: ");
         String to = scanner.nextLine();
         System.out.print("Belopp: ");
-        double amount = scanner.nextDouble();
-        scanner.nextLine();
+        Double amount = readDouble(scanner);
+        if (amount == null) {
+            return;
+        }
 
         if (bank.transfer(from, to, amount)) {
             System.out.println("Överföring klar");
@@ -182,6 +197,26 @@ public class Main {
 
         for (Transaction transaction : history) {
             System.out.println(transaction);
+        }
+    }
+
+    private static Integer readInt(Scanner scanner) {
+        String input = scanner.nextLine().trim();
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Ogiltigt tal");
+            return null;
+        }
+    }
+
+    private static Double readDouble(Scanner scanner) {
+        String input = scanner.nextLine().trim().replace(',', '.');
+        try {
+            return Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Ogiltigt tal");
+            return null;
         }
     }
 }

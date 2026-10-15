@@ -1,3 +1,4 @@
+// Inheritance: StudentAccount extends Account, which already implements Withdrawable.
 public class StudentAccount extends Account {
     private int freeWithdrawalsRemaining;
 
@@ -13,6 +14,7 @@ public class StudentAccount extends Account {
         freeWithdrawalsRemaining = 10;
     }
 
+    // Polymorphism: this override counts down the remaining free withdrawals.
     @Override
     public boolean withdraw(double amount) {
         if (amount <= 0 || amount > balance) {
@@ -23,5 +25,11 @@ public class StudentAccount extends Account {
             freeWithdrawalsRemaining--;
         }
         return true;
+    }
+
+    @Override
+    public void monthEnd() {
+        monthlyFee();
+        resetFreeWithdrawals();
     }
 }

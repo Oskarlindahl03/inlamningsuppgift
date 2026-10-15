@@ -1,3 +1,5 @@
+// Inheritance: Account is the abstract superclass and implements the Withdrawable interface.
+// SavingsAccount, CheckingAccount and StudentAccount extend it.
 public abstract class Account implements Withdrawable {
     protected double balance;
     protected String accountNumber;
@@ -28,6 +30,11 @@ public abstract class Account implements Withdrawable {
         balance += amount;
     }
 
+    // Abstract method from the Withdrawable interface. Each subclass overrides it.
     @Override
     public abstract boolean withdraw(double amount);
+
+    // Overridden in every subclass. The month-end loop calls this on the superclass type.
+    public void monthEnd() {
+    }
 }
