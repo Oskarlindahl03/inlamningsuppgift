@@ -121,7 +121,12 @@ public class Bank {
     public void monthEnd() {
         // Polymorphism: one call on the superclass type. Each subclass runs its own override.
         for (Account account : accounts) {
-            account.monthEnd();
+            double change = account.monthEnd();
+            if (change > 0) {
+                transactions.add(new Transaction(account.getAccountNumber(), "INTEREST", change));
+            } else if (change < 0) {
+                transactions.add(new Transaction(account.getAccountNumber(), "FEE", -change));
+            }
         }
     }
 }

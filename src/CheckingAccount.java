@@ -21,8 +21,9 @@ public class CheckingAccount extends Account {
         return true;
     }
 
-    // Checking accounts have no month end change. The override still runs from the list.
+    // Checking accounts have no month-end change. The override still runs from the list.
     @Override
-    public void monthEnd() {
+    public double monthEnd() {
+        return 0;
     }
 }

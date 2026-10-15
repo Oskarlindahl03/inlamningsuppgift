@@ -28,8 +28,10 @@ public class StudentAccount extends Account {
     }
 
     @Override
-    public void monthEnd() {
+    public double monthEnd() {
+        double before = balance;
         monthlyFee();
         resetFreeWithdrawals();
+        return balance - before;
     }
 }

@@ -34,7 +34,8 @@ public abstract class Account implements Withdrawable {
     @Override
     public abstract boolean withdraw(double amount);
 
-    // Overridden in every subclass. The month-end loop calls this on the superclass type.
-    public void monthEnd() {
+    // Overridden in every subclass. Returns the balance change from month-end.
+    public double monthEnd() {
+        return 0;
     }
 }

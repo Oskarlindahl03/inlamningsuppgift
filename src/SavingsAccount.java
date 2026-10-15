@@ -35,8 +35,10 @@ public class SavingsAccount extends Account {
     }
 
     @Override
-    public void monthEnd() {
+    public double monthEnd() {
+        double before = balance;
         applyInterest();
         resetMonthlyWithdrawals();
+        return balance - before;
     }
 }
