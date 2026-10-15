@@ -5,6 +5,7 @@ public class Bank {
     // Polymorphism: the list type is Account, the objects are subclasses.
     private final List<Account> accounts = new ArrayList<>();
     private final List<Transaction> transactions = new ArrayList<>();
+    private String currentUser;
 
     public List<Account> getAccounts() {
         return accounts;
@@ -36,7 +37,34 @@ public class Bank {
         if (account == null) {
             return false;
         }
-        return accounts.remove(account);
+        boolean removed = accounts.remove(account);
+        if (removed && currentUser != null && !getUsers().contains(currentUser)) {
+            currentUser = null;
+        }
+        return removed;
+    }
+
+    public List<String> getUsers() {
+        List<String> users = new ArrayList<>();
+        for (Account account : accounts) {
+            String ownerName = account.getOwnerName();
+            if (!users.contains(ownerName)) {
+                users.add(ownerName);
+            }
+        }
+        return users;
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public boolean switchUser(String userName) {
+        if (!getUsers().contains(userName)) {
+            return false;
+        }
+        currentUser = userName;
+        return true;
     }
 
     public boolean deposit(String accountNumber, double amount) {

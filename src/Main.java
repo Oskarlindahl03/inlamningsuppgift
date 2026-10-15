@@ -10,6 +10,10 @@ public class Main {
         System.out.println("Välkommen till banksystemet");
 
         while (running) {
+            if (bank.getCurrentUser() != null) {
+                System.out.println();
+                System.out.println("Aktiv användare: " + bank.getCurrentUser());
+            }
             printMenu();
             System.out.print("Välj alternativ: ");
 
@@ -46,7 +50,7 @@ public class Main {
                     System.out.println("Månadsslut kördes");
                     break;
                 case 8:
-                    System.out.println("Välj användare (stub)");
+                    handleSwitchUser(bank, scanner);
                     break;
                 case 0:
                     running = false;
@@ -183,6 +187,33 @@ public class Main {
         } else {
             System.out.println("Överföring misslyckades");
         }
+    }
+
+    private static void handleSwitchUser(Bank bank, Scanner scanner) {
+        List<String> users = bank.getUsers();
+        if (users.isEmpty()) {
+            System.out.println("Inga användare. Öppna ett konto först.");
+            return;
+        }
+
+        System.out.println("Användare:");
+        for (int i = 0; i < users.size(); i++) {
+            System.out.println((i + 1) + ". " + users.get(i));
+        }
+
+        System.out.print("Välj användare: ");
+        Integer choice = readInt(scanner);
+        if (choice == null) {
+            return;
+        }
+        if (choice < 1 || choice > users.size()) {
+            System.out.println("Ogiltigt val");
+            return;
+        }
+
+        String selected = users.get(choice - 1);
+        bank.switchUser(selected);
+        System.out.println("Aktiv användare: " + selected);
     }
 
     private static void handleShowHistory(Bank bank, Scanner scanner) {
