@@ -21,7 +21,13 @@ public class CheckingAccount extends Account {
         return true;
     }
 
-    // Checking accounts have no month-end change. The override still runs from the list.
+    @Override
+    public String toString() {
+        return "Typ: Transaktionskonto\n"
+                + super.toString() + "\n"
+                + "Övertrasseringsgräns: " + overdraftLimit;
+    }
+
     @Override
     public double monthEnd() {
         return 0;

@@ -35,6 +35,14 @@ public class SavingsAccount extends Account {
     }
 
     @Override
+    public String toString() {
+        return "Typ: Sparkonto\n"
+                + super.toString() + "\n"
+                + "Ränta: " + interestRate + "\n"
+                + "Uttag den här månaden: " + withdrawalsThisMonth + " av " + MAX_WITHDRAWALS_PER_MONTH;
+    }
+
+    @Override
     public double monthEnd() {
         double before = balance;
         applyInterest();

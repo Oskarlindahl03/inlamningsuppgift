@@ -45,6 +45,7 @@ Lista minst fyra åtgärder kopplade till samlingen (t.ex. lägga till, ta bort,
 6. Visa transaktionshistorik
 7. Kör månadsslut
 8. Välj användare
+9. Visa konto 
 0. Avsluta
 
 ## Felscenarion
@@ -57,6 +58,10 @@ scenario 2: Vid månads slut appliceras räntan på fel konto
 
 ## Motivering (fylls i senare i veckan)
 
-När ni kommit igång och gjort några ändringar: skriv kort varför strukturen ser ut som den gör, och om ni övervägde ett annat sätt att lösa det på. Detta behöver inte fyllas i redan i första commiten.
+Strukturen ser ut så här för att de tre kontona delar saldo, kontonummer och ägare, men har olika regler för uttag och månadsslut. Det gemensamma ligger i superklassen Account. SavingsAccount, CheckingAccount och StudentAccount ärver den och overrider withdraw och monthEnd. Withdrawable är kontraktet som säger att ett konto måste kunna ta ut pengar. Account implementerar interfacet, så subklasserna får det genom arvet.
+
+Bank håller alla konton i en List<Account>. Vid uttag anropas withdraw via en Withdrawable-referens, och vid månadsslut anropas monthEnd på varje konto i listan. Rätt metod körs automatiskt beroende på objektets typ. Ränta sparas som INTEREST i historiken.
+
+Jag övervägde att lägga reglerna i Bank med if och instanceof för varje kontotyp. Det hade fungerat för tre konton, men varje ny kontotyp hade krävt ändringar i Bank. Med arv räcker det att skriva en ny subklass.
 
 ---

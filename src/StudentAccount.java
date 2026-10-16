@@ -28,6 +28,13 @@ public class StudentAccount extends Account {
     }
 
     @Override
+    public String toString() {
+        return "Typ: Studentkonto\n"
+                + super.toString() + "\n"
+                + "Fria uttag kvar: " + freeWithdrawalsRemaining;
+    }
+
+    @Override
     public double monthEnd() {
         double before = balance;
         monthlyFee();

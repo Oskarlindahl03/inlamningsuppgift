@@ -23,6 +23,13 @@ public abstract class Account implements Withdrawable {
         return balance;
     }
 
+    @Override
+    public String toString() {
+        return "Kontonummer: " + accountNumber + "\n"
+                + "Ägare: " + ownerName + "\n"
+                + "Saldo: " + balance;
+    }
+
     public void deposit(double amount) {
         if (amount <= 0) {
             return;
